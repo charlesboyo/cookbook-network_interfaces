@@ -45,7 +45,7 @@ action :save do
     action :nothing
   end
 
-  template "/etc/network/interfaces.d/#{new_resource.device}" do
+  template "/etc/network/interfaces.d/#{new_resource.name}" do
     cookbook 'network_interfaces'
     source 'interfaces.erb'
     owner 'root'
@@ -89,7 +89,7 @@ action :remove do
     only_if "ifdown -n #{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)} -i /etc/network/interfaces.d/#{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)}"
   end
 
-  file "/etc/network/interfaces.d/#{new_resource.device}" do
+  file "/etc/network/interfaces.d/#{new_resource.name}" do
     action :delete
     notifies :run, "execute[if_down #{new_resource.name}]", :immediately
     notifies :create, 'ruby_block[Merge interfaces]', :delayed
